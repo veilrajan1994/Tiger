@@ -1,0 +1,112 @@
+// Prisma Schema for Pricing Feed Management System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// User model for authentication
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  role      String   @default("STORE_MANAGER")
+  storeId   String?
+  store     Store?   @relation(fields: [storeId], references: [id])
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auditLogs AuditLog[]
+
+  @@index([email])
+  @@map("users")
+}
+
+// Store model
+model Store {
+  id             String          @id @default(uuid())
+  storeId        String          @unique
+  storeName      String
+  country        String
+  city           String?
+  address        String?
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  
+  users          User[]
+  pricingRecords PricingRecord[]
+
+  @@index([storeId])
+  @@index([country])
+  @@map("stores")
+}
+
+// Pricing Record model
+model PricingRecord {
+  id          String   @id @default(uuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id])
+  sku         String
+  productName String
+  price       Float
+  currency    String   @default("USD")
+  date        DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@unique([storeId, sku, date])
+  @@index([storeId])
+  @@index([sku])
+  @@index([date])
+  @@index([storeId, date])
+  @@map("pricing_records")
+}
+
+// Audit Log model
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String
+  oldValue  String?
+  newValue  String?
+  timestamp DateTime @default(now())
+  ipAddress String?
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+// Upload History model
+model UploadHistory {
+  id            String       @id @default(uuid())
+  fileName      String
+  fileSize      Int
+  uploadedBy    String
+  status        String       @default("PROCESSING")
+  totalRecords  Int          @default(0)
+  successCount  Int          @default(0)
+  errorCount    Int          @default(0)
+  errors        String?
+  startedAt     DateTime     @default(now())
+  completedAt   DateTime?
+
+  @@index([uploadedBy])
+  @@index([status])
+  @@index([startedAt])
+  @@map("upload_history")
+}

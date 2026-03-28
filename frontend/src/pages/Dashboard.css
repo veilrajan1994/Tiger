@@ -1,0 +1,336 @@
+.dashboard-page {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.dashboard-page h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 4px;
+}
+
+.dashboard-page .subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 28px;
+}
+
+/* Stat Cards Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 22px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.stat-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-card-label {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.stat-card-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.2;
+}
+
+.stat-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-card-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.stat-card-icon.blue {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.stat-card-icon.green {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.stat-card-icon.orange {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.quick-action-btn:hover {
+  border-color: #4338ca;
+  color: #4338ca;
+  background: #f5f3ff;
+}
+
+.quick-action-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* AI Insights Card */
+.insights-card {
+  background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.insights-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1e1b4b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-badge {
+  background: #4338ca;
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.insights-refresh-btn {
+  background: none;
+  border: 1px solid #a5b4fc;
+  color: #4338ca;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.insights-refresh-btn:hover {
+  background: #4338ca;
+  color: #fff;
+}
+
+.insights-refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.insights-summary {
+  font-size: 0.9375rem;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.insights-section {
+  margin-bottom: 16px;
+}
+
+.insights-section:last-child {
+  margin-bottom: 0;
+}
+
+.insights-section h4 {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px;
+}
+
+.insights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.insights-list li {
+  font-size: 0.875rem;
+  color: #374151;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+.insights-list li::before {
+  content: '→ ';
+  color: #4338ca;
+  font-weight: 700;
+}
+
+.insights-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b7280;
+  font-size: 0.875rem;
+  padding: 20px 0;
+}
+
+.insights-error {
+  color: #991b1b;
+  font-size: 0.875rem;
+  padding: 12px;
+  background: #fef2f2;
+  border-radius: 6px;
+}
+
+/* Loading */
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  color: #6b7280;
+  font-size: 0.9375rem;
+  gap: 10px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #4338ca;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Skeleton Loading ────────────────────────────────────────────────────── */
+
+.stat-card.skeleton .stat-card-value {
+  width: 60px;
+  height: 28px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.stat-card.skeleton .stat-card-label {
+  width: 100px;
+  height: 14px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  color: transparent;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Insights card minimum height so it doesn't collapse */
+.insights-card {
+  min-height: 200px;
+}
+
+.insights-loading {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b7280;
+  font-size: 0.875rem;
+  padding: 20px 0;
+}
+
+/* Skeleton bars for insights loading */
+.insights-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.skeleton-bar {
+  height: 14px;
+  background: #e0e0f0;
+  border-radius: 4px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-bar.w-full { width: 100%; }
+.skeleton-bar.w-3-4 { width: 75%; }
+.skeleton-bar.w-1-2 { width: 50%; }
+.skeleton-bar.w-2-3 { width: 66%; }
+.skeleton-bar.h-lg { height: 18px; }
