@@ -16,7 +16,7 @@
 - Alternatives considered: Java Spring Boot (verbose), Python Django (slower I/O)
 
 ### 3. SQLite with Prisma ORM (Database)
-- SQLite for development simplicity (single file, no server setup)
+- SQLite for development simplicity (single file, no server setup) (Due to simple demo to use this)
 - Prisma provides type-safe queries, automatic migrations, and schema-first design
 - Composite unique constraint (storeId + sku + date) enforced at DB level
 - Indexed on storeId, sku, date, and composite storeId+date for fast queries
