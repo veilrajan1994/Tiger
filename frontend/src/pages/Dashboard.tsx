@@ -197,6 +197,10 @@ const Dashboard: React.FC = () => {
     if (e.key === 'Enter') handleGenerateReport();
   }, [handleGenerateReport]);
 
+  const handleReportQueryChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setReportQuery(e.target.value);
+  }, []);
+
   const handleNavPricing = useCallback(() => navigate('/pricing'), [navigate]);
   const handleNavUpload = useCallback(() => navigate('/upload'), [navigate]);
 
@@ -245,7 +249,7 @@ const Dashboard: React.FC = () => {
               type="text"
               placeholder='e.g. "Weekly report for Tokyo store"'
               value={reportQuery}
-              onChange={(e) => setReportQuery(e.target.value)}
+              onChange={handleReportQueryChange}
               onKeyDown={handleReportKeyDown}
             />
             <button

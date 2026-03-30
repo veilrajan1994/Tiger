@@ -13,16 +13,19 @@ interface NavItemProps {
   onClick: (path: string) => void;
 }
 
-const NavItem = memo<NavItemProps>(({ label, path, icon, isActive, onClick }) => (
-  <button
-    className={`nav-item ${isActive ? 'active' : ''}`}
-    onClick={() => onClick(path)}
-    aria-current={isActive ? 'page' : undefined}
-  >
-    {icon}
-    {label}
-  </button>
-));
+const NavItem = memo<NavItemProps>(({ label, path, icon, isActive, onClick }) => {
+  const handleClick = useCallback(() => onClick(path), [onClick, path]);
+  return (
+    <button
+      className={`nav-item ${isActive ? 'active' : ''}`}
+      onClick={handleClick}
+      aria-current={isActive ? 'page' : undefined}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+});
 NavItem.displayName = 'NavItem';
 
 // ─── Top Bar ─────────────────────────────────────────────────────────────────
@@ -98,28 +101,35 @@ const NAV_ITEMS = [
   { label: 'Upload CSV', path: '/upload', icon: <UploadIcon /> }
 ];
 
-const Sidebar = memo<SidebarProps>(({ isOpen, currentPath, onNavigate, onClose }) => (
-  <>
-    {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
-    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-      <div className="sidebar-brand">
-        <span>Pricing Feed</span>
-      </div>
-      <nav className="sidebar-nav">
-        {NAV_ITEMS.map((item) => (
-          <NavItem
-            key={item.path}
-            label={item.label}
-            path={item.path}
-            icon={item.icon}
-            isActive={currentPath.startsWith(item.path)}
-            onClick={(path) => { onNavigate(path); onClose(); }}
-          />
-        ))}
-      </nav>
-    </aside>
-  </>
-));
+const Sidebar = memo<SidebarProps>(({ isOpen, currentPath, onNavigate, onClose }) => {
+  const handleNavClick = useCallback((path: string) => {
+    onNavigate(path);
+    onClose();
+  }, [onNavigate, onClose]);
+
+  return (
+    <>
+      {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-brand">
+          <span>Pricing Feed</span>
+        </div>
+        <nav className="sidebar-nav">
+          {NAV_ITEMS.map((item) => (
+            <NavItem
+              key={item.path}
+              label={item.label}
+              path={item.path}
+              icon={item.icon}
+              isActive={currentPath.startsWith(item.path)}
+              onClick={handleNavClick}
+            />
+          ))}
+        </nav>
+      </aside>
+    </>
+  );
+});
 Sidebar.displayName = 'Sidebar';
 
 // ─── Layout ──────────────────────────────────────────────────────────────────

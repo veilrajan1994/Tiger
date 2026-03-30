@@ -79,6 +79,26 @@ const FilterPanel = memo<FilterPanelProps>(({
     if (e.key === 'Enter') onSearch();
   }, [onSearch]);
 
+  const handleSkuChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onFilterChange('sku', e.target.value);
+  }, [onFilterChange]);
+
+  const handleProductChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onFilterChange('productName', e.target.value);
+  }, [onFilterChange]);
+
+  const handleStoreChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    onFilterChange('storeId', e.target.value);
+  }, [onFilterChange]);
+
+  const handleDateFromChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onFilterChange('dateFrom', e.target.value);
+  }, [onFilterChange]);
+
+  const handleDateToChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onFilterChange('dateTo', e.target.value);
+  }, [onFilterChange]);
+
   return (
     <div className="filter-panel">
       <button
@@ -102,17 +122,17 @@ const FilterPanel = memo<FilterPanelProps>(({
           <div className="filter-field">
             <label htmlFor="filter-sku">SKU</label>
             <input id="filter-sku" type="text" placeholder="e.g. SKU001"
-              value={filters.sku} onChange={(e) => onFilterChange('sku', e.target.value)} onKeyDown={handleKeyDown} />
+              value={filters.sku} onChange={handleSkuChange} onKeyDown={handleKeyDown} />
           </div>
           <div className="filter-field">
             <label htmlFor="filter-product">Product Name</label>
             <input id="filter-product" type="text" placeholder="Search products..."
-              value={filters.productName} onChange={(e) => onFilterChange('productName', e.target.value)} onKeyDown={handleKeyDown} />
+              value={filters.productName} onChange={handleProductChange} onKeyDown={handleKeyDown} />
           </div>
           {isAdmin && (
             <div className="filter-field">
               <label htmlFor="filter-store">Store</label>
-              <select id="filter-store" value={filters.storeId} onChange={(e) => onFilterChange('storeId', e.target.value)}>
+              <select id="filter-store" value={filters.storeId} onChange={handleStoreChange}>
                 <option value="">All Stores</option>
                 {stores.map((store) => (
                   <option key={store.id} value={store.id}>{store.storeName}</option>
@@ -122,11 +142,11 @@ const FilterPanel = memo<FilterPanelProps>(({
           )}
           <div className="filter-field">
             <label htmlFor="filter-from">Date From</label>
-            <input id="filter-from" type="date" value={filters.dateFrom} onChange={(e) => onFilterChange('dateFrom', e.target.value)} />
+            <input id="filter-from" type="date" value={filters.dateFrom} onChange={handleDateFromChange} />
           </div>
           <div className="filter-field">
             <label htmlFor="filter-to">Date To</label>
-            <input id="filter-to" type="date" value={filters.dateTo} onChange={(e) => onFilterChange('dateTo', e.target.value)} />
+            <input id="filter-to" type="date" value={filters.dateTo} onChange={handleDateToChange} />
           </div>
           <div className="filter-actions">
             <button className="btn btn-primary" onClick={onSearch}>
@@ -172,6 +192,22 @@ const PricingRow = memo<PricingRowProps>(({
     if (e.key === 'Escape') onCancelEdit();
   }, [onSaveEdit, onCancelEdit]);
 
+  const handleEditChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onEditValueChange(e.target.value);
+  }, [onEditValueChange]);
+
+  const handleEditProductName = useCallback(() => {
+    onStartEdit(record.id, 'productName', record.productName);
+  }, [onStartEdit, record.id, record.productName]);
+
+  const handleEditPrice = useCallback(() => {
+    onStartEdit(record.id, 'price', record.price);
+  }, [onStartEdit, record.id, record.price]);
+
+  const handleDelete = useCallback(() => {
+    onDelete(record.id);
+  }, [onDelete, record.id]);
+
   const formattedDate = useMemo(
     () => new Date(record.date).toLocaleDateString(),
     [record.date]
@@ -188,10 +224,10 @@ const PricingRow = memo<PricingRowProps>(({
       <td>
         {isEditingProductName ? (
           <input className="edit-input" value={editValue}
-            onChange={(e) => onEditValueChange(e.target.value)}
+            onChange={handleEditChange}
             onBlur={onSaveEdit} onKeyDown={handleEditKeyDown} autoFocus />
         ) : (
-          <span className="editable-cell" onClick={() => onStartEdit(record.id, 'productName', record.productName)} title="Click to edit">
+          <span className="editable-cell" onClick={handleEditProductName} title="Click to edit">
             {record.productName}
           </span>
         )}
@@ -199,10 +235,10 @@ const PricingRow = memo<PricingRowProps>(({
       <td>
         {isEditingPrice ? (
           <input className="edit-input" type="number" step="0.01" value={editValue}
-            onChange={(e) => onEditValueChange(e.target.value)}
+            onChange={handleEditChange}
             onBlur={onSaveEdit} onKeyDown={handleEditKeyDown} autoFocus />
         ) : (
-          <span className="editable-cell price-cell" onClick={() => onStartEdit(record.id, 'price', record.price)} title="Click to edit">
+          <span className="editable-cell price-cell" onClick={handleEditPrice} title="Click to edit">
             {formattedPrice}
           </span>
         )}
@@ -212,7 +248,7 @@ const PricingRow = memo<PricingRowProps>(({
       <td><span className="country-chip">{record.store?.country || '—'}</span></td>
       {isAdmin && (
         <td className="center">
-          <button className="delete-btn" onClick={() => onDelete(record.id)} title="Delete record" aria-label="Delete record">
+          <button className="delete-btn" onClick={handleDelete} title="Delete record" aria-label="Delete record">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
