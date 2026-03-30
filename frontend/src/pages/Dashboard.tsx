@@ -229,29 +229,29 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* AI Features Grid — Report Generator + Pricing Insights side by side */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="ai-features-grid">
 
         {/* Report Generator */}
-        <div className="insights-card" style={{ margin: 0 }}>
+        <div className="insights-card">
           <div className="insights-header">
             <h3>
               <span className="ai-badge">AI</span>
               Report Generator
             </h3>
           </div>
-          <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem' }}>
+          <div className="report-input-row">
             <input
+              className="report-input"
               type="text"
               placeholder='e.g. "Weekly report for Tokyo store"'
               value={reportQuery}
               onChange={(e) => setReportQuery(e.target.value)}
               onKeyDown={handleReportKeyDown}
-              style={{ flex: 1, padding: '0.625rem 1rem', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '0.875rem', outline: 'none' }}
             />
             <button
+              className="report-generate-btn"
               onClick={handleGenerateReport}
               disabled={reportLoading || !reportQuery.trim()}
-              style={{ padding: '0.625rem 1.25rem', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer', whiteSpace: 'nowrap', opacity: reportLoading || !reportQuery.trim() ? 0.5 : 1 }}
             >
               {reportLoading ? 'Generating...' : 'Generate'}
             </button>
@@ -264,33 +264,33 @@ const Dashboard: React.FC = () => {
             </div>
           )}
           {report && !reportLoading && (
-            <div style={{ border: '1px solid #e5e7eb', borderRadius: '10px', overflow: 'hidden' }}>
-              <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #e5e7eb' }}>
-                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#111827' }}>{report.title}</div>
-                <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Period: {report.period}</div>
+            <div className="report-output">
+              <div className="report-output-header">
+                <div className="report-output-title">{report.title}</div>
+                <div className="report-output-meta">Period: {report.period}</div>
               </div>
               {report.keyMetrics && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '0.5rem', padding: '0.75rem 1rem', background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
+                <div className="report-metrics-grid">
                   {report.keyMetrics.map((m: any, i: number) => (
-                    <div key={i} style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '1rem', fontWeight: 700, color: '#111827' }}>{m.value}</div>
-                      <div style={{ fontSize: '0.6875rem', color: '#6b7280' }}>{m.label}</div>
+                    <div key={i} className="report-metric">
+                      <div className="report-metric-value">{m.value}</div>
+                      <div className="report-metric-label">{m.label}</div>
                     </div>
                   ))}
                 </div>
               )}
               {report.sections?.map((s: any, i: number) => (
-                <div key={i} style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #f3f4f6' }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', marginBottom: '0.25rem' }}>{s.heading}</div>
-                  <div style={{ fontSize: '0.8125rem', color: '#4b5563', lineHeight: 1.5 }}>{s.content}</div>
+                <div key={i} className="report-section">
+                  <div className="report-section-heading">{s.heading}</div>
+                  <div className="report-section-content">{s.content}</div>
                 </div>
               ))}
               {report.recommendations?.length > 0 && (
-                <div style={{ padding: '0.75rem 1rem', background: '#f0fdf4' }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', marginBottom: '0.25rem' }}>Recommendations</div>
-                  <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
+                <div className="report-recs">
+                  <div className="report-recs-title">Recommendations</div>
+                  <ul>
                     {report.recommendations.map((r: string, i: number) => (
-                      <li key={i} style={{ fontSize: '0.8125rem', color: '#374151', lineHeight: 1.5 }}>{r}</li>
+                      <li key={i}>{r}</li>
                     ))}
                   </ul>
                 </div>
@@ -300,14 +300,12 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* AI Pricing Insights — only loads on button click */}
-        <div style={{ margin: 0 }}>
-          <InsightsCard
-            insights={insights}
-            loading={insightsLoading}
-            error={insightsError}
-            onRefresh={fetchInsights}
-          />
-        </div>
+        <InsightsCard
+          insights={insights}
+          loading={insightsLoading}
+          error={insightsError}
+          onRefresh={fetchInsights}
+        />
 
       </div>
     </div>

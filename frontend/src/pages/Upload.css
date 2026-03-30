@@ -448,3 +448,21 @@
 .upload-alert .alert-close:hover {
   opacity: 1;
 }
+
+/* ─── AI Validate Button ──────────────────────────────────────────────────── */
+
+.upload-btn.ai-validate { background: #7c3aed; }
+.upload-btn.ai-validate:hover { background: #6d28d9; }
+
+/* ─── Validation Results ──────────────────────────────────────────────────── */
+
+.validation-card-valid { border-left: 4px solid #22c55e; }
+.validation-card-invalid { border-left: 4px solid #ef4444; }
+.validation-summary { font-size: 0.875rem; color: #4b5563; margin-bottom: 0.75rem; }
+.validation-issue-error { color: #dc2626; }
+.validation-issue-warning { color: #d97706; }
+.validation-suggestion { color: #6b7280; }
+
+/* ─── Hidden file input ───────────────────────────────────────────────────── */
+
+.file-input-hidden { display: none; }

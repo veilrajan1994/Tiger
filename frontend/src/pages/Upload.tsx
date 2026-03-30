@@ -274,7 +274,7 @@ const Upload: React.FC = () => {
           accept=".csv"
           type="file"
           onChange={handleFileChange}
-          style={{ display: 'none' }}
+          className="file-input-hidden"
           id="csv-file-input"
         />
 
@@ -354,10 +354,9 @@ const Upload: React.FC = () => {
 
         <div className="upload-actions">
           <button
-            className="upload-btn"
+            className="upload-btn ai-validate"
             onClick={handleAIValidation}
             disabled={!file || validating || uploading}
-            style={{ background: '#7c3aed' }}
           >
             {validating ? 'Validating...' : 'AI Validate'}
           </button>
@@ -377,22 +376,22 @@ const Upload: React.FC = () => {
       </div>
 
       {validation && (
-        <div className="results-card" style={{ borderLeft: `4px solid ${validation.isValid ? '#22c55e' : '#ef4444'}` }}>
+        <div className={`results-card ${validation.isValid ? 'validation-card-valid' : 'validation-card-invalid'}`}>
           <div className="results-header">
             <h3>AI Validation Results</h3>
             <span className={`status-badge ${validation.isValid ? 'completed' : 'failed'}`}>
               {validation.isValid ? 'VALID' : 'ISSUES FOUND'}
             </span>
           </div>
-          <p style={{ fontSize: '0.875rem', color: '#4b5563', marginBottom: '0.75rem' }}>{validation.summary}</p>
+          <p className="validation-summary">{validation.summary}</p>
           {validation.issues.length > 0 && (
             <div className="error-details">
               <h4>Issues ({validation.issues.length})</h4>
               <ul className="error-list">
                 {validation.issues.slice(0, 15).map((issue, i) => (
-                  <li key={i} style={{ color: issue.severity === 'error' ? '#dc2626' : '#d97706' }}>
+                  <li key={i} className={issue.severity === 'error' ? 'validation-issue-error' : 'validation-issue-warning'}>
                     <strong>Row {issue.row}, {issue.column}:</strong> {issue.issue}
-                    {issue.suggestion && <span style={{ color: '#6b7280' }}> — {issue.suggestion}</span>}
+                    {issue.suggestion && <span className="validation-suggestion"> — {issue.suggestion}</span>}
                   </li>
                 ))}
               </ul>

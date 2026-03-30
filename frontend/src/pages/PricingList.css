@@ -630,3 +630,9 @@
 .ai-clear-btn:hover {
   color: #374151;
 }
+
+/* ─── Utility classes ─────────────────────────────────────────────────────── */
+
+.pagination-label { font-size: 0.8125rem; color: #6b7280; }
+.pagination-page-info { font-size: 0.8125rem; color: #374151; font-weight: 600; }
+.table-scroll { overflow-x: auto; }

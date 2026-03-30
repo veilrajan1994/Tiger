@@ -277,14 +277,14 @@ const Pagination = memo<PaginationProps>(({
         Showing {startRecord}–{endRecord} of {total.toLocaleString()}
       </span>
       <div className="pagination-controls">
-        <label htmlFor="page-size-select" style={{ fontSize: '0.8125rem', color: '#6b7280' }}>Rows:</label>
+        <label htmlFor="page-size-select" className="pagination-label">Rows:</label>
         <select id="page-size-select" value={pageSize} onChange={handlePageSizeChange}>
           <option value={25}>25</option>
           <option value={50}>50</option>
           <option value={100}>100</option>
         </select>
         <button className="page-btn" disabled={page <= 1} onClick={handlePrev}>← Prev</button>
-        <span style={{ fontSize: '0.8125rem', color: '#374151', fontWeight: 600 }}>
+        <span className="pagination-page-info">
           {page} / {totalPages || 1}
         </span>
         <button className="page-btn" disabled={page >= totalPages} onClick={handleNext}>Next →</button>
@@ -569,7 +569,7 @@ const PricingList: React.FC = () => {
           </div>
         ) : (
           <>
-            <div style={{ overflowX: 'auto' }}>
+            <div className="table-scroll">
               <table className="pricing-table">
                 <thead>
                   <tr>
