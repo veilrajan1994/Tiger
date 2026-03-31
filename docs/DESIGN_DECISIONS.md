@@ -40,8 +40,8 @@
 
 ### 6. JWT Authentication with Refresh Tokens
 - Stateless auth enables horizontal scaling
-- Access token (24h) + refresh token (7d) stored in localStorage
-- Axios interceptor auto-refreshes on 401 without user intervention
+- Access token (24h) + refresh token (7d) stored in browser cookies (via custom cookie utility)
+- Axios request interceptor reads token from cookies; response interceptor auto-refreshes on 401
 - Role-based access: ADMIN (full access) and STORE_MANAGER (scoped to assigned store)
 
 ### 7. Async CSV Processing
@@ -72,25 +72,26 @@
 
 ## UI/UX Decisions
 
-### 13. Custom CSS (No UI Library)
+### 11. Custom CSS (No UI Library)
 - Lightweight, no dependency on Material-UI or similar
 - Custom components: StatCard, InsightsCard, FilterPanel, PricingRow, etc.
 - All components memoized with React.memo for render performance
 - Consistent design language with CSS variables
 
 ### 12. Report Generator on Dashboard
+
 - Report Generator placed directly on Dashboard below AI Insights card
 - Input field with Enter key support for quick generation
 - Structured output: title, period, key metrics grid, sections, recommendations
 - No separate AI Hub page — keeps navigation simple
 
-### 15. Inline Editing in Pricing Table
+### 13. Inline Editing in Pricing Table
 - Click-to-edit on productName and price cells
 - Enter to save, Escape to cancel
 - Immediate PUT request with optimistic UI update
 - Audit log created server-side on every edit
 
-### 16. AI Validate Button on Upload Page
+### 14. AI Validate Button on Upload Page
 - Purple "AI Validate" button alongside "Upload File" button
 - Runs before upload so user can review issues
 - Validation results shown with color-coded severity (red errors, yellow warnings)
@@ -98,17 +99,17 @@
 
 ## Performance Decisions
 
-### 17. Database Indexing
+### 15. Database Indexing
 - Indexes: storeId, sku, date, storeId+date composite, email
 - Composite unique constraint prevents duplicate pricing entries
 - Supports common query patterns: filter by store, date range, SKU search
 
-### 18. Rate Limiting
+### 16. Rate Limiting
 - Global: 100 requests per 15 minutes per IP
 - Auth endpoints: 20 requests per 15 minutes (stricter)
 - Prevents abuse of AI endpoints which have external API costs
 
-### 19. Memoized React Components
+### 17. Memoized React Components
 - All sub-components wrapped in React.memo
 - Callbacks stabilized with useCallback
 - Computed values cached with useMemo
@@ -116,21 +117,21 @@
 
 ## Security Decisions
 
-### 20. Password Hashing
+### 18. Password Hashing
 - bcrypt with 10 salt rounds
 - Industry standard, resistant to rainbow table attacks
 
-### 21. Store-Scoped Access Control
+### 19. Store-Scoped Access Control
 - STORE_MANAGER role can only access their assigned store's data
 - Enforced at controller level on every query (not just UI)
 - AI features also respect store scoping
 
-### 22. Input Validation
+### 20. Input Validation
 - Joi schemas on auth and pricing endpoints
 - AI endpoints validate query length (max 500 chars) and row count (max 5000)
 - File upload: CSV only, max 10MB, validated by Multer
 
-### 23. Environment Variables
+### 21. Environment Variables
 - All secrets in .env (JWT_SECRET, GEMINI_API_KEY)
 - .env.example provided as template without real values
 - dotenv loaded at server startup

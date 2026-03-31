@@ -65,7 +65,7 @@ The Retail Pricing Feed Management System serves a retail chain with stores acro
 - Role-based access enforced at controller level (ADMIN vs STORE_MANAGER)
 - Store-scoped queries: STORE_MANAGER can only access assigned store data
 - Helmet.js for HTTP security headers (XSS, clickjacking, MIME sniffing)
-- CORS whitelist (only configured origin allowed)
+- CORS currently configured with wildcard origin (`*`) for development; should be restricted to specific origin in production
 - Rate limiting: 100 req/15min global, 20 req/15min for auth
 - Prisma ORM prevents SQL injection (parameterized queries)
 - Joi validation on all input endpoints

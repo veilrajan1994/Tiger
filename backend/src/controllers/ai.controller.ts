@@ -60,10 +60,15 @@ export const aiSearch = asyncHandler(
       ? { [filters.sortBy]: filters.sortOrder || 'desc' }
       : { date: 'desc' as const };
 
+    // Use AI-parsed limit (e.g. "top 2") or default to 50
+    const take = filters.limit && filters.limit > 0 && filters.limit <= 100
+      ? filters.limit
+      : 50;
+
     const [records, total] = await Promise.all([
       prisma.pricingRecord.findMany({
         where,
-        take: 50,
+        take,
         orderBy,
         include: {
           store: { select: { storeId: true, storeName: true, country: true } }
@@ -117,7 +122,7 @@ export const validateCSV = asyncHandler(
     }
 
     const stores = await prisma.store.findMany({ select: { storeId: true } });
-    const storeIds = stores.map(s => s.storeId);
+    const storeIds = stores.map((s:any) => s.storeId);
 
     const validation = await validateCSVWithAI(rows, storeIds);
 

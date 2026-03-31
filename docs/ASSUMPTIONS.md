@@ -21,7 +21,7 @@
 - Store managers can only view/edit/upload for their assigned store
 - Admin users can access all stores and delete records
 - Users authenticate via email + password
-- Default credentials seeded: admin@example.com/admin123, {city}@example.com/manager123
+- Default credentials seeded: admin@example.com/admin123, {city}@example.com/manager123, manager@example.com/manager123 (legacy)
 
 ## Technical Assumptions
 
@@ -116,7 +116,7 @@
 - AI features respect the same role-based scoping
 
 ### API Security
-- CORS configured for frontend origin only (http://localhost:3000)
+- CORS currently configured with wildcard origin (`*`) for development convenience; should be restricted in production
 - Rate limiting prevents brute force and AI endpoint abuse
 - Gemini API key never exposed to frontend (backend-only)
 

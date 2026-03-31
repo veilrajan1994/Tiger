@@ -9,7 +9,7 @@
 │  │                                                              │  │
 │  │  Pages:                                                      │  │
 │  │  • Login          — JWT authentication                       │  │
-│  │  • Dashboard      — Stats + AI Insights card                 │  │
+│  │  • Dashboard      — Stats + AI Insights & Generator Report   │  │
 │  │  • Pricing List   — Search, filter, inline edit, AI Search   │  │
 │  │  • Upload CSV     — Drag-drop upload + AI Validation         │  │
 │  │                                                              │  │
@@ -122,6 +122,11 @@
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET    | `/stores`| List all stores |
+
+### Bootstrap (`/api/bootstrap`)
+| Method | Endpoint       | Description                                    |
+|--------|----------------|------------------------------------------------|
+| GET    | `/bootstrap`   | Create/reset store manager accounts (dev only) |
 
 ### AI Features (`/api/ai`)
 | Method | Endpoint | Description |

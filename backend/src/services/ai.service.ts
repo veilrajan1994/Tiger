@@ -14,6 +14,7 @@ export interface ParsedSearchFilters {
   maxPrice?: number;
   sortBy?: string;
   sortOrder?: string;
+  limit?: number;
 }
 
 export interface DashboardInsight {
@@ -76,11 +77,14 @@ Return a JSON object with ONLY these optional fields (omit fields that aren't me
 - maxPrice: number
 - sortBy: "date" | "price" | "sku" | "productName"
 - sortOrder: "asc" | "desc"
+- limit: number (if the user asks for "top N", "least N", "first N", "bottom N", etc. — extract N as the limit)
 
 For relative dates like "last week", "this month", "past 30 days", calculate from today.
 If the user says "expensive" or "high price", sort by price desc.
-If the user says "cheap" or "low price", sort by price asc.
-If the user says "recent" or "latest", sort by date desc.`;
+If the user says "cheap" or "low price" or "least expensive", sort by price asc.
+If the user says "recent" or "latest", sort by date desc.
+If the user says "top 2 expensive", set sortBy to "price", sortOrder to "desc", and limit to 2.
+If the user says "least 2" or "cheapest 2", set sortBy to "price", sortOrder to "asc", and limit to 2.`;
 
   const result = await model.generateContent({
     contents: [{ role: 'user', parts: [{ text: `${systemPrompt}\n\nUser query: ${query}` }] }],

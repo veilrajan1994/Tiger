@@ -107,6 +107,6 @@
    Validation → Database Update → Audit Log → UI Update
 
 7. Auth Flow:
-   Login → JWT Token + Refresh Token → Stored in localStorage →
+   Login → JWT Token + Refresh Token → Stored in Cookies →
    Auto-refresh on 401 → Role-based route access
 

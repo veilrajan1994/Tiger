@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { Prisma } from '@prisma/client';
 import prisma from '../utils/prisma';
 import { AppError, asyncHandler } from '../middleware/errorHandler';
 import { AuthRequest } from '../middleware/auth';
@@ -17,8 +16,8 @@ const buildPricingWhere = (
   query: Record<string, any>,
   userRole?: string,
   userStoreId?: string
-): Prisma.PricingRecordWhereInput => {
-  const where: Prisma.PricingRecordWhereInput = {};
+): any => {
+  const where: any = {};
 
   // Store managers are scoped to their store
   if (userRole === 'STORE_MANAGER' && userStoreId) {
@@ -133,7 +132,7 @@ export const updatePricingRecord = asyncHandler(
     }
 
     // Only update fields that were actually provided
-    const updateData: Prisma.PricingRecordUpdateInput = { updatedBy: req.user?.id };
+    const updateData:any = { updatedBy: req.user?.id };
     if (price !== undefined) updateData.price = price;
     if (productName !== undefined) updateData.productName = productName;
 
