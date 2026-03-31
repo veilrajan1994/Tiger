@@ -66,3 +66,181 @@ This document maps every file in the Retail Pricing Feed Management System to it
 | `backend/src/controllers/pricing.controller.ts` | Pricing CRUD | `GET /api/pricing`, `GET /api/pricing/:id`, `PUT /api/pricing/:id`, `DELETE /api/pricing/:id` | Paginated search with filters (store, sku, product, date range, price range). Store-scoped access for managers. Audit logging on update/delete. Admin-only delete. |
 | `backend/src/controllers/upload.controller.ts` | CSV upload | `POST /api/upload/csv`, `GET /api/upload/history`, `GET /api/upload/:id/status` | Async CSV processing with streaming parser. Multi-format date parsing (YYYY-MM-DD, DD/MM/YYYY, DD-MM-YYYY). Batch upsert in transactions of 500. Store ID resolution in single query. File cleanup after processing. |
 | `backend/src/controllers/ai.controller.ts` | AI features | `POST /api/ai/search`, `GET /api/ai/insights`, `POST /api/ai/validate-csv`, `POST /api/ai/report` | Delegates to `ai.service.ts`. Validates query length (max 500 chars) and row count (max 5000). Respects role-based store scoping. |
+
+### Routes
+
+| File | Mounts At | Middleware | Methods |
+|------|-----------|-----------|---------|
+| `backend/src/routes/auth.routes.ts` | `/api/auth` | Joi validation (`loginSchema`, `registerSchema`) | POST `/login`, POST `/register`, POST `/refresh` |
+| `backend/src/routes/store.routes.ts` | `/api/stores` | `authenticate` | GET `/`, GET `/:id` |
+| `backend/src/routes/pricing.routes.ts` | `/api/pricing` | `authenticate`, `authorize('ADMIN')` on DELETE, Joi validation on PUT and GET | GET `/`, GET `/:id`, PUT `/:id`, DELETE `/:id` |
+| `backend/src/routes/upload.routes.ts` | `/api/upload` | `authenticate`, Multer (CSV only, 10MB max, disk storage) | POST `/csv`, GET `/history`, GET `/:id/status` |
+| `backend/src/routes/ai.routes.ts` | `/api/ai` | `authenticate` | POST `/search`, GET `/insights`, POST `/validate-csv`, POST `/report` |
+
+### Middleware
+
+| File | Exports | Purpose |
+|------|---------|---------|
+| `backend/src/middleware/auth.ts` | `authenticate`, `authorize` | JWT verification from `Authorization: Bearer` header. `authorize(...roles)` checks user role against allowed roles. Defines `AuthRequest` and `AuthUser` interfaces. |
+| `backend/src/middleware/errorHandler.ts` | `AppError`, `errorHandler`, `asyncHandler` | `AppError` class for operational errors with status codes. Global error handler logs and returns JSON errors. `asyncHandler` wraps async controllers to catch promise rejections. |
+| `backend/src/middleware/validation.ts` | `validate`, `validateQuery` | Generic Joi validation middleware for `req.body` and `req.query`. Returns 400 with joined error messages on failure. |
+
+### Services
+
+| File | Exports | Purpose |
+|------|---------|---------|
+| `backend/src/services/ai.service.ts` | `parseNaturalLanguageQuery`, `generateDashboardInsights`, `validateCSVWithAI`, `generateReport` | All Google Gemini AI integration. Lazy singleton model initialization. Uses `responseMimeType: 'application/json'` with `cleanJsonResponse()` fallback for markdown fences. Temperature tuned per use case (0 for search, 0.5 for reports, 0.7 for insights). |
+| `backend/src/services/audit.service.ts` | `createAuditLog` | Fire-and-forget audit log creation. Stores action, entity, old/new values as JSON, user ID, and IP address. Silently catches errors to avoid disrupting main flow. |
+
+### Validators
+
+| File | Exports | Validates |
+|------|---------|-----------|
+| `backend/src/validators/auth.validator.ts` | `loginSchema`, `registerSchema` | Login: email + password. Register: email, password (min 8), firstName, lastName, optional role and storeId. |
+| `backend/src/validators/pricing.validator.ts` | `updatePricingSchema`, `searchPricingSchema` | Update: optional price (positive number) and productName (min 1 field). Search: pagination, filters (store, sku, product, dates, price range), sort options. |
+
+### Utilities
+
+| File | Exports | Purpose |
+|------|---------|---------|
+| `backend/src/utils/prisma.ts` | `prisma` (default) | Singleton PrismaClient. Logs warnings+errors in dev, errors only in production. |
+| `backend/src/utils/logger.ts` | `logger` | Winston logger with JSON format. Outputs to console (colorized), `logs/error.log`, and `logs/combined.log`. |
+
+### Configuration
+
+| File | Purpose |
+|------|---------|
+| `backend/.env` | Environment variables: `PORT`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `GEMINI_API_KEY`, `NODE_ENV`, rate limit settings. |
+| `backend/tsconfig.json` | TypeScript compiler configuration. |
+| `backend/package.json` | Dependencies and scripts. Dev: `nodemon src/server.ts`. Build: `tsc`. Seed: `ts-node prisma/seed.ts`. |
+
+---
+
+## Frontend — File-by-File Breakdown
+
+### Entry Point
+
+| File | Purpose |
+|------|---------|
+| `frontend/src/index.tsx` | Renders the React app inside `BrowserRouter` and `AuthProvider`. Mounts to `#root` in `index.html`. |
+| `frontend/src/App.tsx` | Defines routes: `/login` (public), `/dashboard`, `/pricing`, `/upload` (all wrapped in `PrivateRoute` + `Layout`). Root `/` redirects to `/dashboard`. |
+| `frontend/public/index.html` | HTML shell with `#root` mount point. |
+
+### Contexts
+
+| File | Exports | Purpose |
+|------|---------|---------|
+| `frontend/src/contexts/AuthContext.tsx` | `AuthProvider`, `useAuth` | Manages auth state (user, token). Provides `login()` (calls API, stores JWT + user in cookies) and `logout()` (clears cookies, redirects). Restores session from cookies on mount. |
+
+### Components
+
+| File | Exports | Purpose |
+|------|---------|---------|
+| `frontend/src/components/Layout.tsx` | `Layout` (default) | App shell with sidebar navigation (Dashboard, Pricing Records, Upload CSV), top bar (user info, logout), and `<Outlet />` for page content. All sub-components memoized with `React.memo`. |
+| `frontend/src/components/Layout.css` | — | Styles for sidebar, top bar, navigation items, mobile responsive overlay. |
+| `frontend/src/components/PrivateRoute.tsx` | `PrivateRoute` (default) | Route guard. Shows loading spinner while auth state initializes, redirects to `/login` if not authenticated. |
+
+### Pages
+
+| File | Purpose | Key Features |
+|------|---------|--------------|
+| `frontend/src/pages/Login.tsx` | Login page | Email + password form, calls `useAuth().login()`, error display. |
+| `frontend/src/pages/Login.css` | Login page styles | — |
+| `frontend/src/pages/Dashboard.tsx` | Main dashboard | Stat cards, AI-generated insights (via `GET /api/ai/insights`), AI report generator (via `POST /api/ai/report`). |
+| `frontend/src/pages/Dashboard.css` | Dashboard styles | — |
+| `frontend/src/pages/PricingList.tsx` | Pricing records page | Paginated table with filters (store, SKU, product, date range, price range). Inline editing (click-to-edit on productName and price). AI natural language search (via `POST /api/ai/search`). Admin-only delete. |
+| `frontend/src/pages/PricingList.css` | Pricing list styles | — |
+| `frontend/src/pages/Upload.tsx` | CSV upload page | File drag-and-drop, AI validation before upload (via `POST /api/ai/validate-csv`), upload progress polling (via `GET /api/upload/:id/status`), upload history table. |
+| `frontend/src/pages/Upload.css` | Upload page styles | — |
+
+### Services
+
+| File | Exports | Purpose |
+|------|---------|---------|
+| `frontend/src/services/api.ts` | `api` (default) | Axios instance with base URL from `REACT_APP_API_URL`. Request interceptor adds JWT from cookies. Response interceptor auto-refreshes token on 401 (calls `/auth/refresh`), redirects to login on failure. |
+
+### Utilities
+
+| File | Exports | Purpose |
+|------|---------|---------|
+| `frontend/src/utils/cookies.ts` | `setCookie`, `getCookie`, `removeCookie` | Browser cookie helpers. Sets expiry in days, uses `SameSite=Strict`, encodes/decodes values. |
+
+### Configuration
+
+| File | Purpose |
+|------|---------|
+| `frontend/.env` | `REACT_APP_API_URL` — backend API base URL. |
+| `frontend/.env.example` | Template for environment variables. |
+| `frontend/tsconfig.json` | TypeScript compiler configuration. |
+| `frontend/package.json` | Dependencies and scripts. Uses `react-scripts` for build tooling. |
+| `frontend/vercel.json` | Vercel deployment config (SPA rewrites). |
+
+---
+
+## Data Seeding
+
+| File | What It Creates |
+|------|-----------------|
+| `backend/prisma/seed.ts` | 5 stores (New York, London, Tokyo, Paris, Sydney), 1 admin (`admin@example.com` / `admin123`), 5 city-specific store managers (`{city}@example.com` / `manager123`), 1 legacy manager (`manager@example.com` / `manager123`), 25 pricing records (5 products × 5 stores). |
+| `backend/add-managers.js` | Standalone script to create/reset store manager accounts. |
+
+---
+
+## API Endpoint Summary
+
+| Group | Method | Endpoint | Auth | Role | Handler |
+|-------|--------|----------|------|------|---------|
+| Auth | POST | `/api/auth/login` | No | Any | `auth.controller.login` |
+| Auth | POST | `/api/auth/register` | No | Any | `auth.controller.register` |
+| Auth | POST | `/api/auth/refresh` | No | Any | `auth.controller.refreshToken` |
+| Stores | GET | `/api/stores` | Yes | Any | `store.controller.getStores` |
+| Stores | GET | `/api/stores/:id` | Yes | Any | `store.controller.getStore` |
+| Pricing | GET | `/api/pricing` | Yes | Any | `pricing.controller.getPricingRecords` |
+| Pricing | GET | `/api/pricing/:id` | Yes | Any | `pricing.controller.getPricingRecord` |
+| Pricing | PUT | `/api/pricing/:id` | Yes | Any | `pricing.controller.updatePricingRecord` |
+| Pricing | DELETE | `/api/pricing/:id` | Yes | ADMIN | `pricing.controller.deletePricingRecord` |
+| Upload | POST | `/api/upload/csv` | Yes | Any | `upload.controller.uploadCSV` |
+| Upload | GET | `/api/upload/history` | Yes | Any | `upload.controller.getUploadHistory` |
+| Upload | GET | `/api/upload/:id/status` | Yes | Any | `upload.controller.getUploadStatus` |
+| AI | POST | `/api/ai/search` | Yes | Any | `ai.controller.aiSearch` |
+| AI | GET | `/api/ai/insights` | Yes | Any | `ai.controller.getInsights` |
+| AI | POST | `/api/ai/validate-csv` | Yes | Any | `ai.controller.validateCSV` |
+| AI | POST | `/api/ai/report` | Yes | Any | `ai.controller.generateAIReport` |
+| System | GET | `/health` | No | Any | Inline in `server.ts` |
+| System | GET | `/api/bootstrap` | No | Any | Inline in `server.ts` |
+
+---
+
+## Key Design Patterns Used
+
+| Pattern | Where | Details |
+|---------|-------|---------|
+| Singleton | `prisma.ts`, `ai.service.ts` | Single PrismaClient and Gemini model instance reused across requests. |
+| Async Handler | All controllers | `asyncHandler` wraps every controller to catch promise rejections and forward to error middleware. |
+| Fire-and-Forget | `audit.service.ts` | Audit logs are created without awaiting, so they don't block the response. |
+| Middleware Chain | `server.ts`, routes | helmet → cors → rate-limit → body-parser → request logging → routes → error handler. |
+| Role-Based Access | Controllers + `authorize` middleware | ADMIN has full access; STORE_MANAGER is scoped to their assigned store at the query level. |
+| Batch Processing | `upload.controller.ts` | CSV rows upserted in transactions of 500 for memory efficiency. |
+| Token Refresh | `api.ts` (frontend) | Axios interceptor catches 401, calls `/auth/refresh`, retries original request. |
+| Memoization | All frontend components | `React.memo`, `useCallback`, `useMemo` to prevent unnecessary re-renders. |
+
+---
+
+## Technology Stack
+
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| Frontend Framework | React | 18.x |
+| Frontend Routing | React Router | 6.x |
+| HTTP Client | Axios | 1.6.x |
+| Backend Runtime | Node.js | 18+ |
+| Backend Framework | Express | 4.18.x |
+| Language | TypeScript | 5.3.x |
+| ORM | Prisma | 5.9.x |
+| Database | SQLite | via Prisma |
+| AI | Google Gemini | gemini-2.5-flash |
+| Auth | jsonwebtoken + bcrypt | JWT |
+| Validation | Joi | 17.x |
+| Logging | Winston | 3.11.x |
+| File Upload | Multer | 1.4.x |
+| Security | Helmet + CORS + express-rate-limit | — |
