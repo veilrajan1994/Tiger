@@ -120,17 +120,3 @@
 - Rate limiting prevents brute force and AI endpoint abuse
 - Gemini API key never exposed to frontend (backend-only)
 
-## Out of Scope
-
-- Multi-currency support (all prices stored as-is)
-- Real-time price synchronization between stores
-- Offline mode / PWA
-- Mobile application
-- Multi-language UI (English only)
-- ERP/POS system integration
-- Email notifications
-- Advanced workflow approvals
-- User self-registration (accounts created by admin/seed)
-- AI model fine-tuning or custom training
-- AI response caching/persistence
-- Export to PDF/Excel (future enhancement)

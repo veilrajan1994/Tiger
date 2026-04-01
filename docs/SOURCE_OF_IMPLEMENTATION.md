@@ -46,7 +46,7 @@ This document maps every file in the Retail Pricing Feed Management System to it
 
 | File | Purpose |
 |------|---------|
-| `backend/src/server.ts` | Express app setup. Registers all middleware (helmet, cors, rate-limit, body-parser), mounts all route groups under `/api/*`, defines `/health` and `/api/bootstrap` endpoints, handles graceful shutdown on SIGTERM/SIGINT. |
+| `backend/src/server.ts` | Express app setup. Registers all middleware (helmet, cors, rate-limit, body-parser), mounts all route groups under `/api/*`, defines `/health` endpoint, handles graceful shutdown on SIGTERM/SIGINT. |
 
 ### Database Layer
 
@@ -207,7 +207,7 @@ This document maps every file in the Retail Pricing Feed Management System to it
 | AI | POST | `/api/ai/validate-csv` | Yes | Any | `ai.controller.validateCSV` |
 | AI | POST | `/api/ai/report` | Yes | Any | `ai.controller.generateAIReport` |
 | System | GET | `/health` | No | Any | Inline in `server.ts` |
-| System | GET | `/api/bootstrap` | No | Any | Inline in `server.ts` |
+
 
 ---
 

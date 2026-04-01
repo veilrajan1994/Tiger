@@ -64,45 +64,6 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// ─── Bootstrap: create store managers (hit /api/bootstrap in browser) ────────
-
-app.get('/api/bootstrap', async (_req, res) => {
-  try {
-    const bcrypt = require('bcrypt');
-    const password = await bcrypt.hash('manager123', 10);
-
-    const stores = await prisma.store.findMany({ orderBy: { storeId: 'asc' } });
-    const managers = [
-      { email: 'newyork@example.com', firstName: 'New York', lastName: 'Manager', storeId: 'STORE001' },
-      { email: 'london@example.com', firstName: 'London', lastName: 'Manager', storeId: 'STORE002' },
-      { email: 'tokyo@example.com', firstName: 'Tokyo', lastName: 'Manager', storeId: 'STORE003' },
-      { email: 'paris@example.com', firstName: 'Paris', lastName: 'Manager', storeId: 'STORE004' },
-      { email: 'sydney@example.com', firstName: 'Sydney', lastName: 'Manager', storeId: 'STORE005' }
-    ];
-
-    const results = [];
-    for (const mgr of managers) {
-      const store = stores.find((s: any) => s.storeId === mgr.storeId);
-      if (!store) { results.push(`${mgr.email}: store not found`); continue; }
-
-      const user = await prisma.user.upsert({
-        where: { email: mgr.email },
-        update: { password },
-        create: {
-          email: mgr.email, password,
-          firstName: mgr.firstName, lastName: mgr.lastName,
-          role: 'STORE_MANAGER', storeId: store.id
-        }
-      });
-      results.push(`${mgr.email} -> ${store.storeName} (${user.id})`);
-    }
-
-    res.json({ status: 'success', message: 'Store managers created', results });
-  } catch (err: any) {
-    res.status(500).json({ status: 'error', message: err.message });
-  }
-});
-
 // ─── Routes ──────────────────────────────────────────────────────────────────
 
 app.use('/api/auth', authLimiter, authRoutes);

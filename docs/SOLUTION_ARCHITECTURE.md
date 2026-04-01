@@ -123,11 +123,6 @@
 |--------|----------|-------------|
 | GET    | `/stores`| List all stores |
 
-### Bootstrap (`/api/bootstrap`)
-| Method | Endpoint       | Description                                    |
-|--------|----------------|------------------------------------------------|
-| GET    | `/bootstrap`   | Create/reset store manager accounts (dev only) |
-
 ### AI Features (`/api/ai`)
 | Method | Endpoint | Description |
 |--------|-------------------|------------------------------------------------------------|
