@@ -1,6 +1,5 @@
 .app-layout {
   min-height: 100vh;
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ─── Top Bar ─────────────────────────────────────────────────────────────── */
@@ -231,11 +230,6 @@
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
 /* ─── Main Content ────────────────────────────────────────────────────────── */
 
 .main-content {
@@ -267,18 +261,4 @@
   color: #6b7280;
   font-size: 0.9375rem;
   gap: 10px;
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #e5e7eb;
-  border-top-color: #4338ca;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }

@@ -9,7 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 
 const App: React.FC = () => {
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div className="app-root">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route

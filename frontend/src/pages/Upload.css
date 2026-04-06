@@ -1,5 +1,4 @@
 .upload-page {
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -266,14 +265,6 @@
 .progress-text .spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid #e5e7eb;
-  border-top-color: #4338ca;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 /* Results Card */
@@ -421,11 +412,6 @@
   justify-content: space-between;
   align-items: center;
   animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .upload-alert.error {
