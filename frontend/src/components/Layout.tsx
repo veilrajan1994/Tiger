@@ -134,7 +134,7 @@ Sidebar.displayName = 'Sidebar';
 
 // ─── Layout ──────────────────────────────────────────────────────────────────
 
-const Layout: React.FC = () => {
+const Layout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();

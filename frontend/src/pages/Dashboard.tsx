@@ -118,7 +118,7 @@ InsightsCard.displayName = 'InsightsCard';
 
 // ─── Main Dashboard ──────────────────────────────────────────────────────────
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
@@ -146,7 +146,7 @@ const Dashboard: React.FC = () => {
         const [pricingRes, storesRes, uploadsRes] = await Promise.all([
           api.get('/pricing?limit=1'),
           api.get('/stores'),
-          api.get('/upload/history?limit=10')
+          api.get('/upload/history')
         ]);
         setStats({
           totalRecords: pricingRes.data.data.pagination.total,

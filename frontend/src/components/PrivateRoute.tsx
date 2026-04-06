@@ -6,7 +6,7 @@ interface PrivateRouteProps {
   children: React.ReactNode;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = memo(({ children }) => {
+const PrivateRoute = memo<PrivateRouteProps>(({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {

@@ -101,7 +101,7 @@ ResultsCard.displayName = 'ResultsCard';
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 
-const Upload: React.FC = () => {
+const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState<UploadResult | null>(null);

@@ -332,7 +332,7 @@ Pagination.displayName = 'Pagination';
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 
-const PricingList: React.FC = () => {
+const PricingList = () => {
   const { user } = useAuth();
   const [records, setRecords] = useState<PricingRecord[]>([]);
   const [stores, setStores] = useState<Store[]>([]);

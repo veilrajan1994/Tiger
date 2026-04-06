@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -7,7 +6,7 @@ import Upload from './pages/Upload';
 import Layout from './components/Layout';
 import PrivateRoute from './components/PrivateRoute';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <div className="app-root">
       <Routes>
